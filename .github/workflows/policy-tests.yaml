@@ -22,8 +22,8 @@ jobs:
           chmod +x "$HOME/bin/opa"
           curl -sSL "https://github.com/open-policy-agent/gatekeeper/releases/download/${GATOR_VERSION}/gator-${GATOR_VERSION}-linux-amd64.tar.gz" | tar xz -C "$HOME/bin" gator
           echo "$HOME/bin" >> "$GITHUB_PATH"
-          opa version | head -1
-          gator --version
+          "$HOME/bin/opa" version | head -1
+          "$HOME/bin/gator" --version
 
       - name: Templates match src.rego
         run: make check
