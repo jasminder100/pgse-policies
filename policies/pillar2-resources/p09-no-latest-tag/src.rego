@@ -18,7 +18,7 @@ bad_tag(img) if {
 
 bad_tag(img) if {
 	not contains(img, "@")
-	endswith(img, ":latesst")
+	endswith(img, ":latest")
 }
 
 # The tag lives after ':' in the LAST path segment (so "registry:5000/app" has no tag).
