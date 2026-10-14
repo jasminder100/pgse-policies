@@ -1,5 +1,5 @@
 # K8s-PGSE policy repo
-.PHONY: build check opa-test gator-test test
+.PHONY: build check opa-test gator-test test waivers
 
 build:            ## embed src.rego into template.yaml
 	python3 scripts/build-templates.py
@@ -13,4 +13,7 @@ opa-test:         ## Rego unit tests with plain OPA
 gator-test: build ## template + constraint vs sample manifests
 	gator verify ./policies/...
 
-test: opa-test gator-test
+test: opa-test gator-test waivers
+
+waivers:          ## waivers/*.yaml: required fields, not expired, max 90 days
+	python3 scripts/check-waivers.py

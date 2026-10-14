@@ -33,6 +33,27 @@ def context():
     except FileNotFoundError:
         return "unknown"
 
+def load_waivers(args):
+    if args.input:
+        return []
+    try:
+        out = subprocess.run(["kubectl", "get", "policywaivers", "-o", "json"],
+                             check=True, capture_output=True, text=True).stdout
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return []  # CRD not installed yet
+    now = dt.datetime.now(dt.timezone.utc)
+    res = []
+    for w in json.loads(out).get("items", []):
+        sp = w.get("spec", {})
+        try:
+            exp = dt.datetime.fromisoformat(sp.get("expiresAt", "").replace("Z", "+00:00"))
+            state = "ACTIVE" if exp > now else "EXPIRED"
+        except ValueError:
+            state = "INVALID"
+        res.append({"name": w["metadata"]["name"], "state": state,
+                    **{k: sp.get(k) for k in ("rule", "namespace", "namePrefix", "expiresAt", "ticket", "approvedBy", "reason")}})
+    return sorted(res, key=lambda x: (x["rule"] or "", x["name"]))
+
 def rule_id(name):
     m = re.match(r"p(\d+)", name)
     return f"P{int(m.group(1)):02d}" if m else "-"
@@ -75,6 +96,7 @@ def main():
             "violationsByNamespace": dict(by_ns.most_common()),
         },
         "constraints": rows,
+        "waivers": load_waivers(args),
     }
 
     print(f"K8s-PGSE compliance report  |  cluster: {report['cluster']}  |  {report['generatedAt']}")
@@ -89,6 +111,12 @@ def main():
           f"Total violations: {s['totalViolations']}  Compliance: {s['compliancePercent']}%")
     if by_ns:
         print("Violations by namespace: " + ", ".join(f"{k}={v}" for k, v in by_ns.most_common()))
+
+    if report["waivers"]:
+        print("Waivers:")
+        for w in report["waivers"]:
+            print(f"  {w['state']:<8} {w['rule']} ns={w['namespace']} prefix={w['namePrefix'] or '*'} "
+                  f"until {w['expiresAt']} ({w['ticket']})")
 
     out = args.output or f"pgse-report-{now:%Y%m%d-%H%M%S}.json"
     with open(out, "w") as f:

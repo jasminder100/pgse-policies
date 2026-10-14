@@ -1,0 +1,12 @@
+apiVersion: pgse.io/v1alpha1
+kind: PolicyWaiver
+metadata:
+  name: local-path-storage-p08
+spec:
+  rule: P08
+  namespace: local-path-storage
+  namePrefix: local-path-provisioner
+  expiresAt: "2026-11-13T00:00:00Z"
+  reason: kind's built-in storage provisioner ships without resource limits; not used on EKS
+  approvedBy: platform-team
+  ticket: PGSE-001

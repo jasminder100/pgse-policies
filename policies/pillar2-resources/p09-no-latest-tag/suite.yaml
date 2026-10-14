@@ -15,3 +15,13 @@ tests:
         object: samples/disallowed.yaml
         assertions:
           - violations: yes
+      - name: disallowed-sample-with-valid-waiver
+        object: samples/disallowed.yaml
+        inventory: [samples/waiver-valid.yaml]
+        assertions:
+          - violations: no
+      - name: disallowed-sample-with-expired-waiver
+        object: samples/disallowed.yaml
+        inventory: [samples/waiver-expired.yaml]
+        assertions:
+          - violations: yes
