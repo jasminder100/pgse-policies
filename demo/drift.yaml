@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-old
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: web-old}
+  template:
+    metadata:
+      labels: {app: web-old}
+    spec:
+      containers:
+        - name: web
+          image: nginx:latest
+          resources:
+            requests: {cpu: 100m, memory: 64Mi}
+            limits:   {cpu: 200m, memory: 128Mi}

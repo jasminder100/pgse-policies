@@ -1,0 +1,17 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p09-no-latest-tag
+tests:
+  - name: p09-no-latest-tag
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: allowed-sample
+        object: samples/allowed.yaml
+        assertions:
+          - violations: no
+      - name: disallowed-sample
+        object: samples/disallowed.yaml
+        assertions:
+          - violations: yes

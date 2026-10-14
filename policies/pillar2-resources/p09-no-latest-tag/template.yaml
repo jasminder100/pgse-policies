@@ -1,0 +1,55 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8spgsenolatesttag
+  annotations:
+    pgse.io/rule: "9"
+    pgse.io/pillar: "resources"
+    description: Rejects images using the latest tag or no tag at all.
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sPgseNoLatestTag
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8spgsenolatesttag
+
+        import future.keywords.contains
+        import future.keywords.if
+        import future.keywords.in
+
+        # Rule 9: reject ":latest" and images with no tag. Digests (@sha256:...) are allowed.
+        violation contains {"msg": msg} if {
+        	some c in containers
+        	bad_tag(c.image)
+        	msg := sprintf("[P09] container <%v> in %v <%v> uses image <%v>; pin an explicit version tag or digest (not :latest)", [c.name, input.review.object.kind, input.review.object.metadata.name, c.image])
+        }
+
+        bad_tag(img) if {
+        	not contains(img, "@")
+        	not has_tag(img)
+        }
+
+        bad_tag(img) if {
+        	not contains(img, "@")
+        	endswith(img, ":latest")
+        }
+
+        # The tag lives after ':' in the LAST path segment (so "registry:5000/app" has no tag).
+        has_tag(img) if {
+        	parts := split(img, "/")
+        	contains(parts[count(parts) - 1], ":")
+        }
+
+        # --- shared helper: find the pod spec in any workload kind ---
+        pod_spec := input.review.object.spec if input.review.object.kind == "Pod"
+        pod_spec := input.review.object.spec.jobTemplate.spec.template.spec if input.review.object.kind == "CronJob"
+        pod_spec := input.review.object.spec.template.spec if {
+        	not input.review.object.kind in {"Pod", "CronJob"}
+        }
+
+        containers contains c if some c in pod_spec.containers
+        containers contains c if some c in pod_spec.initContainers
+        containers contains c if some c in pod_spec.ephemeralContainers
