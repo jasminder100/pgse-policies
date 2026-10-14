@@ -1,0 +1,35 @@
+name: policy-tests
+
+on:
+  pull_request:          # every PR into this repo
+  push:
+    branches: [main]     # and every push to main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      OPA_VERSION: v1.4.2
+      GATOR_VERSION: v3.19.1
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Install OPA and gator
+        run: |
+          mkdir -p "$HOME/bin"
+          curl -sSLo "$HOME/bin/opa" "https://github.com/open-policy-agent/opa/releases/download/${OPA_VERSION}/opa_linux_amd64_static"
+          chmod +x "$HOME/bin/opa"
+          curl -sSL "https://github.com/open-policy-agent/gatekeeper/releases/download/${GATOR_VERSION}/gator-${GATOR_VERSION}-linux-amd64.tar.gz" | tar xz -C "$HOME/bin" gator
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+          opa version | head -1
+          gator --version
+
+      - name: Templates match src.rego
+        run: make check
+
+      - name: OPA unit tests
+        run: make opa-test
+
+      - name: Gator suites (template + constraint vs samples)
+        run: gator verify -v ./policies/...
