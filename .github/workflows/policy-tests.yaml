@@ -4,6 +4,8 @@ on:
   pull_request:          # every PR into this repo
   push:
     branches: [main]     # and every push to main
+  schedule:
+    - cron: "30 3 * * *" # daily: fails once a waiver has expired, as a reminder to remove/renew it
 
 jobs:
   test:
@@ -33,3 +35,6 @@ jobs:
 
       - name: Gator suites (template + constraint vs samples)
         run: gator verify -v ./policies/...
+
+      - name: Waiver guardrails
+        run: make waivers
