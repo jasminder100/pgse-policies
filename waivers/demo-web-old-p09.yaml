@@ -1,0 +1,12 @@
+apiVersion: pgse.io/v1alpha1
+kind: PolicyWaiver
+metadata:
+  name: demo-web-old-p09
+spec:
+  rule: P09
+  namespace: demo
+  namePrefix: web-old
+  expiresAt: "2026-10-22T00:00:00Z"
+  reason: Legacy web-old still on nginx:latest; pinning planned for next release
+  approvedBy: platform-team
+  ticket: PGSE-002
