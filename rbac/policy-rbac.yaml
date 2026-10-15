@@ -1,0 +1,81 @@
+# ---------- 1. Policy admins: full control ----------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pgse-policy-admin
+rules:
+- apiGroups: ["templates.gatekeeper.sh"]
+  resources: ["constrainttemplates"]
+  verbs: ["*"]
+- apiGroups: ["constraints.gatekeeper.sh"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["pgse.io"]            # <-- your Waiver CRD's group
+  resources: ["*"]
+  verbs: ["*"]
+---
+# ---------- 2. Developers: read-only ----------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pgse-policy-viewer
+rules:
+- apiGroups: ["templates.gatekeeper.sh", "constraints.gatekeeper.sh", "status.gatekeeper.sh", "pgse.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+---
+# ---------- 3. Break-glass: loosen, never delete ----------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pgse-breakglass
+rules:
+- apiGroups: ["templates.gatekeeper.sh"]
+  resources: ["constrainttemplates"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["constraints.gatekeeper.sh"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "patch", "update"]
+- apiGroups: ["pgse.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "create"]
+---
+# ---------- Bindings: role -> group ----------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pgse-policy-admin-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pgse-policy-admin
+subjects:
+- kind: Group
+  name: pgse-policy-admins
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pgse-policy-viewer-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pgse-policy-viewer
+subjects:
+- kind: Group
+  name: pgse-developers
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pgse-breakglass-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pgse-breakglass
+subjects:
+- kind: Group
+  name: pgse-breakglass
+  apiGroup: rbac.authorization.k8s.io
