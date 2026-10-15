@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-ok
+  name: web-unprivileged
   namespace: demo
 spec:
   replicas: 2
@@ -14,5 +14,8 @@ spec:
       containers:
         - name: web
           image: nginx:1.27.0
+          resources:
+           requests: { cpu: 50m, memory: 64Mi }
+           limits:   { cpu: 100m, memory: 128Mi }
           securityContext:
             privileged: false
