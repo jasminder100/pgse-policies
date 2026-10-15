@@ -1,0 +1,70 @@
+name: policy-sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "policies/**"
+      - "waivers/**"
+      - ".github/workflows/policy-sync.yaml"
+  workflow_dispatch:          # manual "Run workflow" button
+
+permissions:
+  id-token: write             # lets the job request a GitHub OIDC token
+  contents: read
+
+concurrency:
+  group: policy-sync          # never run two syncs at the same time
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: ap-south-1
+  CLUSTER_NAME: pgse-trial
+  ROLE_ARN: arn:aws:iam::563675986491:role/pgse-policy-sync
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Log in to AWS with OIDC (no stored keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Connect kubectl to EKS
+        run: aws eks update-kubeconfig --name "$CLUSTER_NAME" --region "$AWS_REGION"
+
+      - name: Apply ConstraintTemplates
+        run: |
+          set -euo pipefail
+          for f in $(find policies -name template.yaml | sort); do
+            kubectl apply -f "$f"
+          done
+
+      - name: Wait for templates to compile
+        run: |
+          kubectl wait constrainttemplate --all \
+            --for=jsonpath='{.status.created}'=true --timeout=90s
+
+      - name: Apply Constraints
+        run: |
+          set -euo pipefail
+          for f in $(find policies -name constraint.yaml | sort); do
+            kubectl apply -f "$f"
+          done
+
+      - name: Apply Waivers
+        run: |
+          if ls waivers/*.yaml >/dev/null 2>&1; then
+            kubectl apply -f waivers/
+          else
+            echo "No waivers to apply"
+          fi
+
+      - name: Summary
+        if: always()
+        run: kubectl get constrainttemplates,constraints
