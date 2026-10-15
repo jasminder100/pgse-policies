@@ -3,7 +3,7 @@ kind: K8sPgseNoLatestTag
 metadata:
   name: p09-no-latest-tag
 spec:
-  enforcementAction: warn
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]
