@@ -1,0 +1,24 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p05-readonly-root-fs
+tests:
+  - name: p05-readonly-root-fs
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: allowed-sample-prod
+        object: samples/allowed.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: no
+      - name: disallowed-sample-prod
+        object: samples/disallowed.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: yes
+      - name: writable-in-dev-is-ignored
+        object: samples/disallowed-in-dev.yaml
+        inventory: [samples/ns-dev.yaml]
+        assertions:
+          - violations: no

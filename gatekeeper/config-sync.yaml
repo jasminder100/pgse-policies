@@ -11,3 +11,7 @@ spec:
       - group: pgse.io
         version: v1alpha1
         kind: PolicyWaiver
+
+      - group: ""
+        version: v1
+        kind: namespace
