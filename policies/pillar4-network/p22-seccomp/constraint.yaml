@@ -1,0 +1,17 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPgseSeccomp
+metadata:
+  name: p22-require-seccomp
+spec:
+  enforcementAction: dryrun
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet", "ReplicaSet"]
+      - apiGroups: ["batch"]
+        kinds: ["Job", "CronJob"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]
+  parameters:
+    allowedProfileTypes: ["RuntimeDefault", "Localhost"]

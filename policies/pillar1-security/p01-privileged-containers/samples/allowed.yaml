@@ -9,12 +9,14 @@ spec:
     matchLabels: {app: web-unprivileged}
   template:
     metadata:
-      labels: {app: web-unprivilged}
+      labels: {app: web-unprivileged}
     spec:
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: web
           image: nginxinc/nginx-unprivileged:1.27.0-alpine
