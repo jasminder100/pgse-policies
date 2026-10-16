@@ -25,6 +25,10 @@ spec:
           resources:
             requests: {cpu: 50m, memory: 64Mi}
             limits:   {cpu: 100m, memory: 128Mi}
+          readinessProbe:
+            httpGet: {path: /, port: 8080}
+          livenessProbe:
+            httpGet: {path: /, port: 8080}
           volumeMounts:
             - name: tmp
               mountPath: /tmp
