@@ -1,0 +1,17 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p24-plaintext-secrets
+tests:
+  - name: p24-plaintext-secrets
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: allowed-sample
+        object: samples/allowed.yaml
+        assertions:
+          - violations: no
+      - name: disallowed-sample
+        object: samples/disallowed.yaml
+        assertions:
+          - violations: yes
