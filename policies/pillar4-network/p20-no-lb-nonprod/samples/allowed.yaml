@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-internal
+  namespace: demo
+spec:
+  type: ClusterIP
+  selector: {app: pgse-sample-app}
+  ports:
+    - port: 80
+      targetPort: 8080

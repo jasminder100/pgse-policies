@@ -1,0 +1,16 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPgseNoLbNonProd
+metadata:
+  name: p20-no-loadbalancer-nonprod
+spec:
+  enforcementAction: dryrun
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Service"]
+    namespaceSelector:
+      matchExpressions:
+        - key: environment
+          operator: NotIn
+          values: ["prod"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]

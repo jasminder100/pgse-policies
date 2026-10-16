@@ -1,0 +1,24 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p20-no-lb-nonprod
+tests:
+  - name: p20-no-lb-nonprod
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: clusterip-allowed
+        object: samples/allowed.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: no
+      - name: loadbalancer-in-dev-denied
+        object: samples/disallowed.yaml
+        inventory: [samples/ns-dev.yaml]
+        assertions:
+          - violations: yes
+      - name: loadbalancer-in-prod-allowed
+        object: samples/lb-in-prod.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: no
