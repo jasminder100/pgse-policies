@@ -1,0 +1,17 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p04-host-namespaces
+tests:
+  - name: p04-host-namespaces
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: allowed-sample
+        object: samples/allowed.yaml
+        assertions:
+          - violations: no
+      - name: disallowed-sample
+        object: samples/disallowed.yaml
+        assertions:
+          - violations: yes
