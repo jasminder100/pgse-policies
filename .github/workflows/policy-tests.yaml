@@ -38,3 +38,6 @@ jobs:
 
       - name: Waiver guardrails
         run: make waivers
+
+      - name: All allowed samples pass all rules
+        run: make samples-check
