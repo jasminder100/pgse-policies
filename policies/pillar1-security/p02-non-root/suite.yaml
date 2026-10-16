@@ -1,0 +1,17 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p02-non-root
+tests:
+  - name: p02-non-root
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: allowed-sample
+        object: samples/allowed.yaml
+        assertions:
+          - violations: no
+      - name: disallowed-sample
+        object: samples/disallowed.yaml
+        assertions:
+          - violations: yes

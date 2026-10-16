@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-nonroot
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: web-nonroot}
+  template:
+    metadata:
+      labels: {app: web-nonroot}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+      containers:
+        - name: web
+          image: nginxinc/nginx-unprivileged:1.27.0-alpine
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits:   {cpu: 100m, memory: 128Mi}
