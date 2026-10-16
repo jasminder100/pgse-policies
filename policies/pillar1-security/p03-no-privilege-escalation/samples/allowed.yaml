@@ -11,6 +11,7 @@ spec:
     metadata:
       labels: {app: web-no-escalate}
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 101
