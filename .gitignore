@@ -1,2 +1,5 @@
 report.json
 pgse-report-*.json
+
+# Generated compliance reports
+/*.json
