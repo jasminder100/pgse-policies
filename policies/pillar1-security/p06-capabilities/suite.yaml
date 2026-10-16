@@ -1,0 +1,17 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p06-capabilities
+tests:
+  - name: p06-capabilities
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: allowed-sample
+        object: samples/allowed.yaml
+        assertions:
+          - violations: no
+      - name: disallowed-sample
+        object: samples/disallowed.yaml
+        assertions:
+          - violations: yes
