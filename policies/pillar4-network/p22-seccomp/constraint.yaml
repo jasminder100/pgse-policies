@@ -3,7 +3,7 @@ kind: K8sPgseSeccomp
 metadata:
   name: p22-require-seccomp
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

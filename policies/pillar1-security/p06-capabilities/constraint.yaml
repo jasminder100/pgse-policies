@@ -3,7 +3,7 @@ kind: K8sPgseCapabilities
 metadata:
   name: p06-restrict-capabilities
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

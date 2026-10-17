@@ -3,7 +3,7 @@ kind: K8sPgseIngressTls
 metadata:
   name: p19-ingress-tls
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: ["networking.k8s.io"]

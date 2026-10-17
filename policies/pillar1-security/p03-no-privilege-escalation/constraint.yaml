@@ -3,7 +3,7 @@ kind: K8sPgseNoPrivilegeEscalation
 metadata:
   name: p03-no-privilege-escalation
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

@@ -3,7 +3,7 @@ kind: K8sPgseEnvLabel
 metadata:
   name: p15-environment-label
 spec:
-  enforcementAction: dryrun
+  enforcementAction: warn
   match:
     kinds:
       - apiGroups: [""]

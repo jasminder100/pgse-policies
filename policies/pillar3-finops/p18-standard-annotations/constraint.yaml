@@ -3,7 +3,7 @@ kind: K8sPgseAnnotations
 metadata:
   name: p18-standard-annotations
 spec:
-  enforcementAction: dryrun
+  enforcementAction: warn
   match:
     kinds:
       - apiGroups: [""]

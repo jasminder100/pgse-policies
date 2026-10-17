@@ -3,7 +3,7 @@ kind: K8sPgseHostPorts
 metadata:
   name: p23-restrict-host-ports
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]
