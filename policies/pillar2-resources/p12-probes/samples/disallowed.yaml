@@ -11,12 +11,15 @@ spec:
     metadata:
       labels: {app: web-no-probes}
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: web
-          image: nginxinc/nginx-unprivileged:1.27.0-alpine
+          image: 563675986491.dkr.ecr.ap-south-1.amazonaws.com/mirror/nginx-unprivileged:1.27.0-alpine
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

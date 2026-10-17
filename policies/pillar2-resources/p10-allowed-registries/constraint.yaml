@@ -1,0 +1,19 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPgseAllowedRegistries
+metadata:
+  name: p10-allowed-registries
+spec:
+  enforcementAction: dryrun
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet", "ReplicaSet"]
+      - apiGroups: ["batch"]
+        kinds: ["Job", "CronJob"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]
+  parameters:
+    allowedRegistries:
+      - "563675986491.dkr.ecr.ap-south-1.amazonaws.com"   # our own ECR account only
+      - "*.azurecr.io"                                    # narrow to our ACR name on AKS
