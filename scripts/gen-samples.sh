@@ -61,3 +61,5 @@ sed -e 's/web-ok/web-unannotated/g' -e '/^  annotations:$/,+2d' \
   "$BASE" > $P/pillar3-finops/p18-standard-annotations/samples/disallowed.yaml
 sed -e 's/web-ok/web-http-url/g' -e 's|repository-url: https://|repository-url: http://|' \
   "$BASE" > $P/pillar3-finops/p18-standard-annotations/samples/bad-url.yaml
+# P11: a prod Deployment, checked against a matching PDB / a useless PDB / none
+gen web-pdb $P/pillar2-resources/p11-pdb/samples/deployment.yaml

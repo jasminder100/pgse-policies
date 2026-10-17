@@ -1,0 +1,11 @@
+# CI-only fixture: stands in for the PDBs app teams ship with their workloads,
+# so samples-check can evaluate P11 against the allowed samples in "demo".
+# NEVER applied to a cluster (an empty selector would cover every pod in the namespace).
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: samples-pdb
+  namespace: demo
+spec:
+  minAvailable: 1
+  selector: {}

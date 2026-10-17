@@ -20,7 +20,7 @@ waivers:          ## waivers/*.yaml: required fields, not expired, max 90 days
 samples-check:    ## every allowed sample must pass EVERY rule, not just its own
 	@ARGS=""; for f in $$(find policies -name template.yaml -o -name constraint.yaml | sort); do ARGS="$$ARGS -f $$f"; done; \
 	S=""; for f in $$(find policies -name allowed.yaml | sort); do S="$$S -f $$f"; done; \
-	OUT=$$(gator test $$ARGS -f namespaces/ $$S); \
+	OUT=$$(gator test $$ARGS -f namespaces/ -f test-fixtures/ $$S); \
 	if [ -n "$$OUT" ]; then echo "$$OUT"; echo "FAIL: an allowed sample breaks another rule"; exit 1; fi; \
 	echo "OK: all allowed samples pass all rules"
 

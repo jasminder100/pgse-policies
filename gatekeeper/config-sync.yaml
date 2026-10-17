@@ -23,3 +23,7 @@ spec:
       - group: networking.k8s.io
         version: v1
         kind: NetworkPolicy
+
+      - group: policy
+        version: v1
+        kind: PodDisruptionBudget

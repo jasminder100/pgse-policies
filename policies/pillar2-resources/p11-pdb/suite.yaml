@@ -1,0 +1,24 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p11-pdb
+tests:
+  - name: p11-pdb
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: deployment-with-pdb-ok
+        object: samples/deployment.yaml
+        inventory: [samples/ns-prod.yaml, samples/pdb.yaml]
+        assertions:
+          - violations: no
+      - name: deployment-without-pdb-flagged
+        object: samples/deployment.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: yes
+      - name: useless-pdb-flagged
+        object: samples/deployment.yaml
+        inventory: [samples/ns-prod.yaml, samples/pdb-zero.yaml]
+        assertions:
+          - violations: yes

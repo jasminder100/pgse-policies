@@ -1,0 +1,15 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPgsePdb
+metadata:
+  name: p11-require-pdb-prod
+spec:
+  # warn, permanently: a Deployment and its PDB are applied together, in no guaranteed order.
+  enforcementAction: warn
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet"]
+    namespaceSelector:
+      matchLabels:
+        environment: prod
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]
