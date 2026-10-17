@@ -3,7 +3,7 @@ kind: K8sPgseNonRoot
 metadata:
   name: p02-disallow-root-users
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

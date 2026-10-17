@@ -3,7 +3,7 @@ kind: K8sPgseHostNamespaces
 metadata:
   name: p04-host-namespace-isolation
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

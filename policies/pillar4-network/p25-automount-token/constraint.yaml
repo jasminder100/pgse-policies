@@ -3,7 +3,7 @@ kind: K8sPgseAutomountToken
 metadata:
   name: p25-no-automount-token
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

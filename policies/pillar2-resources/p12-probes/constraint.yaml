@@ -3,7 +3,7 @@ kind: K8sPgseProbes
 metadata:
   name: p12-require-probes
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

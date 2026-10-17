@@ -3,7 +3,7 @@ kind: K8sPgseNoLbNonProd
 metadata:
   name: p20-no-loadbalancer-nonprod
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

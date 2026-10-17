@@ -3,7 +3,7 @@ kind: K8sPgseOwnershipLabels
 metadata:
   name: p14-ownership-labels
 spec:
-  enforcementAction: dryrun
+  enforcementAction: warn
   match:
     kinds:
       - apiGroups: [""]

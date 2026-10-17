@@ -3,7 +3,7 @@ kind: K8sPgseAllowedRegistries
 metadata:
   name: p10-allowed-registries
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

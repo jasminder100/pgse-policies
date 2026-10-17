@@ -3,7 +3,7 @@ kind: K8sPgsePlaintextSecrets
 metadata:
   name: p24-no-plaintext-secrets
 spec:
-  enforcementAction: dryrun
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]
