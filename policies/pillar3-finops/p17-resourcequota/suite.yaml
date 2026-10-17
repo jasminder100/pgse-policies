@@ -1,0 +1,23 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p17-resourcequota
+tests:
+  - name: p17-resourcequota
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: namespace-with-quota-ok
+        object: samples/ns.yaml
+        inventory: [samples/quota.yaml]
+        assertions:
+          - violations: no
+      - name: namespace-without-quota-flagged
+        object: samples/ns.yaml
+        assertions:
+          - violations: yes
+      - name: cpu-only-quota-flagged
+        object: samples/ns.yaml
+        inventory: [samples/quota-cpu-only.yaml]
+        assertions:
+          - violations: yes
