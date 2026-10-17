@@ -1,0 +1,13 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPgseDefaultDeny
+metadata:
+  name: p21-default-deny-netpol
+spec:
+  # warn, permanently: the NetworkPolicy can only be created AFTER its namespace,
+  # so this rule is enforced by the AUDIT, not at admission.
+  enforcementAction: warn
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "kube-public", "kube-node-lease", "default"]

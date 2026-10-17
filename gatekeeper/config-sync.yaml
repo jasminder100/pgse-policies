@@ -19,3 +19,7 @@ spec:
       - group: ""
         version: v1
         kind: ResourceQuota
+
+      - group: networking.k8s.io
+        version: v1
+        kind: NetworkPolicy
