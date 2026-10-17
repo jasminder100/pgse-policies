@@ -3,6 +3,10 @@ kind: Deployment
 metadata:
   name: web-unconfined
   namespace: demo
+  labels:
+    owner: platform-team
+    team: pgse
+    cost-center: cc-1001
 spec:
   replicas: 1
   selector:
