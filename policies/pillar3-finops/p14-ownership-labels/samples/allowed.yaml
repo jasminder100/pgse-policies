@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-labelled
+  namespace: demo
+  labels:
+    owner: platform-team
+    team: pgse
+    cost-center: cc-1001
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: web-labelled}
+  template:
+    metadata:
+      labels: {app: web-labelled}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: web
+          image: 563675986491.dkr.ecr.ap-south-1.amazonaws.com/mirror/nginx-unprivileged:1.27.0-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits:   {cpu: 100m, memory: 128Mi}
+          readinessProbe:
+            httpGet: {path: /, port: 8080}
+          livenessProbe:
+            httpGet: {path: /, port: 8080}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

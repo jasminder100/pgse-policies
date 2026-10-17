@@ -27,6 +27,7 @@ sed -e 's/web-ok/web-caps-ok/g' -e 's/^              drop: \["ALL"\]$/&\n       
 sed -e 's/web-ok/web-secret-ref/g' \
     -e 's/^          image: .*$/&\n          env:\n            - name: LOG_LEVEL\n              value: info\n            - name: DB_PASSWORD\n              valueFrom:\n                secretKeyRef: {name: db-creds, key: password, optional: true}/' \
   "$BASE" > $P/pillar4-network/p24-plaintext-secrets/samples/allowed.yaml
+gen web-labelled      $P/pillar3-finops/p14-ownership-labels/samples/allowed.yaml
 
 # Disallowed samples = base with exactly ONE thing broken
 sed -e 's/web-ok/web-dockerhub/g' -e 's|image: .*|image: nginxinc/nginx-unprivileged:1.27.0-alpine|' \
@@ -44,4 +45,7 @@ sed -e 's/web-ok/web-plaintext/g' \
 sed -e 's/web-ok/web-token/g' -e '/automountServiceAccountToken/d' \
   "$BASE" > $P/pillar4-network/p25-automount-token/samples/disallowed.yaml
 
+
 echo "regenerated samples from $BASE"
+sed -e 's/web-ok/web-unlabelled/g' -e '/^  labels:$/,+3d' \
+  "$BASE" > $P/pillar3-finops/p14-ownership-labels/samples/disallowed.yaml

@@ -4,3 +4,6 @@ metadata:
   name: demo
   labels:
     environment: prod
+    owner: platform-team
+    team: pgse
+    cost-center: cc-1001
