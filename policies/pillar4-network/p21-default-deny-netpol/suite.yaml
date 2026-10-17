@@ -1,0 +1,23 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p21-default-deny-netpol
+tests:
+  - name: p21-default-deny-netpol
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: namespace-with-default-deny-ok
+        object: samples/ns.yaml
+        inventory: [samples/netpol-deny.yaml]
+        assertions:
+          - violations: no
+      - name: namespace-without-policy-flagged
+        object: samples/ns.yaml
+        assertions:
+          - violations: yes
+      - name: allow-all-lookalike-flagged
+        object: samples/ns.yaml
+        inventory: [samples/netpol-allow-all.yaml]
+        assertions:
+          - violations: yes

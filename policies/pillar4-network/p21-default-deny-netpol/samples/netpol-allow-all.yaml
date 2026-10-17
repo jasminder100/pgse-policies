@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: looks-strict-but-allows-all
+  namespace: team-a
+spec:
+  podSelector: {}
+  policyTypes: ["Ingress"]
+  ingress:
+    - {}
