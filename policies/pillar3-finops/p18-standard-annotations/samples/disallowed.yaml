@@ -9,7 +9,7 @@ metadata:
     cost-center: cc-1001
     environment: prod
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels: {app: web-unannotated}
   template:

@@ -1,0 +1,18 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPgseReplicas
+metadata:
+  name: p16-replica-limits-prod
+spec:
+  # warn: a Deployment and its HPA are applied together, in no guaranteed order.
+  enforcementAction: warn
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+    namespaceSelector:
+      matchLabels:
+        environment: prod
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]
+  parameters:
+    minReplicas: 2
+    maxReplicasWithoutHpa: 10

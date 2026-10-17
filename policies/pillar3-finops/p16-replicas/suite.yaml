@@ -1,0 +1,29 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p16-replicas
+tests:
+  - name: p16-replicas
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: two-replicas-ok
+        object: samples/deployment.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: no
+      - name: one-replica-flagged
+        object: samples/one-replica.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: yes
+      - name: twenty-replicas-without-hpa-flagged
+        object: samples/twenty-replicas.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: yes
+      - name: twenty-replicas-with-hpa-ok
+        object: samples/twenty-replicas.yaml
+        inventory: [samples/ns-prod.yaml, samples/hpa.yaml]
+        assertions:
+          - violations: no
