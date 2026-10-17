@@ -1,5 +1,5 @@
 # K8s-PGSE policy repo
-.PHONY: build check opa-test gator-test test waivers samples-check
+.PHONY: build check opa-test gator-test test waivers samples-check samples
 
 build:            ## embed src.rego into template.yaml
 	python3 scripts/build-templates.py
@@ -23,3 +23,6 @@ samples-check:    ## every allowed sample must pass EVERY rule, not just its own
 	OUT=$$(gator test $$ARGS -f namespaces/ $$S); \
 	if [ -n "$$OUT" ]; then echo "$$OUT"; echo "FAIL: an allowed sample breaks another rule"; exit 1; fi; \
 	echo "OK: all allowed samples pass all rules"
+
+samples:          ## regenerate pod samples from the P08 base
+	./scripts/gen-samples.sh
