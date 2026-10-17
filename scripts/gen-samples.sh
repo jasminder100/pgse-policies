@@ -55,3 +55,9 @@ sed -e 's/web-ok/web-env-typo/g' -e 's/^    environment: prod$/    environment: 
   "$BASE" > $P/pillar3-finops/p15-environment-label/samples/disallowed.yaml
 sed -e 's/web-ok/web-env-mismatch/g' -e 's/^  namespace: demo$/  namespace: dev-sandbox/' \
   "$BASE" > $P/pillar3-finops/p15-environment-label/samples/mismatch.yaml
+# P18: allowed / no annotations / http instead of https
+gen web-annotated $P/pillar3-finops/p18-standard-annotations/samples/allowed.yaml
+sed -e 's/web-ok/web-unannotated/g' -e '/^  annotations:$/,+2d' \
+  "$BASE" > $P/pillar3-finops/p18-standard-annotations/samples/disallowed.yaml
+sed -e 's/web-ok/web-http-url/g' -e 's|repository-url: https://|repository-url: http://|' \
+  "$BASE" > $P/pillar3-finops/p18-standard-annotations/samples/bad-url.yaml

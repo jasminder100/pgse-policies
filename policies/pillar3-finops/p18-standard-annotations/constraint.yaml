@@ -1,0 +1,17 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPgseAnnotations
+metadata:
+  name: p18-standard-annotations
+spec:
+  enforcementAction: dryrun
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+      - apiGroups: ["batch"]
+        kinds: ["Job", "CronJob"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "kube-public", "kube-node-lease", "default"]
+  parameters:
+    annotations: ["app.kubernetes.io/managed-by", "repository-url"]
