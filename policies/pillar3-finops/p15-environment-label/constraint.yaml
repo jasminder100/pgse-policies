@@ -1,0 +1,17 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPgseEnvLabel
+metadata:
+  name: p15-environment-label
+spec:
+  enforcementAction: dryrun
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace", "Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+      - apiGroups: ["batch"]
+        kinds: ["Job", "CronJob"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "kube-public", "kube-node-lease", "default"]
+  parameters:
+    allowedValues: ["dev", "staging", "prod"]

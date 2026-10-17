@@ -1,0 +1,79 @@
+package k8spgseenvlabel
+
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
+
+rule_id := "P15"
+
+labels := object.get(input.review.object.metadata, "labels", {})
+
+env := object.get(labels, "environment", "")
+
+# 15a: label must exist and be exactly one of the allowed values (case-sensitive)
+violation contains {"msg": msg} if {
+	not waived
+	not controller_pod
+	not env in allowed_values
+	msg := sprintf("[P15] %v <%v> has environment label <%v>; must be one of %v", [input.review.object.kind, obj_name, show(env), allowed_values])
+}
+
+# 15b: a workload's environment must match its namespace's environment
+violation contains {"msg": msg} if {
+	not waived
+	not controller_pod
+	input.review.object.kind != "Namespace"
+	env in allowed_values
+	ns_env := data.inventory.cluster.v1.Namespace[obj_namespace].metadata.labels.environment
+	env != ns_env
+	msg := sprintf("[P15] %v <%v> is labelled environment=%v but its namespace <%v> is environment=%v", [input.review.object.kind, obj_name, env, obj_namespace, ns_env])
+}
+
+allowed_values := object.get(object.get(input, "parameters", {}), "allowedValues", ["dev", "staging", "prod"])
+
+show(v) := "missing" if v == ""
+
+show(v) := v if v != ""
+
+controller_pod if {
+	input.review.object.kind == "Pod"
+	count(object.get(input.review.object.metadata, "ownerReferences", [])) > 0
+}
+
+# --- shared helper: find the pod spec in any workload kind ---
+pod_spec := input.review.object.spec if input.review.object.kind == "Pod"
+pod_spec := input.review.object.spec.jobTemplate.spec.template.spec if input.review.object.kind == "CronJob"
+pod_spec := input.review.object.spec.template.spec if {
+	not input.review.object.kind in {"Pod", "CronJob"}
+}
+
+containers contains c if some c in pod_spec.containers
+containers contains c if some c in pod_spec.initContainers
+containers contains c if some c in pod_spec.ephemeralContainers
+
+# --- shared helper: object identity (Pods created by controllers only have generateName at admission) ---
+obj_name := n if n := input.review.object.metadata.name
+
+obj_name := n if {
+	not input.review.object.metadata.name
+	n := input.review.object.metadata.generateName
+}
+
+obj_namespace := ns if ns := input.review.object.metadata.namespace
+
+obj_namespace := ns if {
+	not input.review.object.metadata.namespace
+	ns := input.review.namespace
+}
+
+# --- shared helper: time-bound waivers ---
+# PolicyWaiver objects (pgse.io/v1alpha1, cluster-scoped) are synced by Gatekeeper into data.inventory.
+# A waiver matches when rule + namespace match, the object name starts with namePrefix ("" = whole
+# namespace), and expiresAt is still in the future. Once expired, the violation comes back automatically.
+waived if {
+	some w in data.inventory.cluster["pgse.io/v1alpha1"].PolicyWaiver
+	w.spec.rule == rule_id
+	w.spec.namespace == obj_namespace
+	startswith(obj_name, object.get(w.spec, "namePrefix", ""))
+	time.parse_rfc3339_ns(w.spec.expiresAt) > time.now_ns()
+}
