@@ -47,5 +47,11 @@ sed -e 's/web-ok/web-token/g' -e '/automountServiceAccountToken/d' \
 
 
 echo "regenerated samples from $BASE"
-sed -e 's/web-ok/web-unlabelled/g' -e '/^  labels:$/,+3d' \
+sed -e 's/web-ok/web-unlabelled/g' -e '/^  labels:$/,+4d' \
   "$BASE" > $P/pillar3-finops/p14-ownership-labels/samples/disallowed.yaml
+# P15: allowed / bad value / prod workload in a dev namespace
+gen web-env-ok $P/pillar3-finops/p15-environment-label/samples/allowed.yaml
+sed -e 's/web-ok/web-env-typo/g' -e 's/^    environment: prod$/    environment: production/' \
+  "$BASE" > $P/pillar3-finops/p15-environment-label/samples/disallowed.yaml
+sed -e 's/web-ok/web-env-mismatch/g' -e 's/^  namespace: demo$/  namespace: dev-sandbox/' \
+  "$BASE" > $P/pillar3-finops/p15-environment-label/samples/mismatch.yaml

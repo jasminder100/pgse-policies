@@ -1,0 +1,23 @@
+kind: Suite
+apiVersion: test.gatekeeper.sh/v1alpha1
+metadata:
+  name: p15-environment-label
+tests:
+  - name: p15-environment-label
+    template: template.yaml
+    constraint: constraint.yaml
+    cases:
+      - name: allowed-sample
+        object: samples/allowed.yaml
+        inventory: [samples/ns-prod.yaml]
+        assertions:
+          - violations: no
+      - name: bad-value-denied
+        object: samples/disallowed.yaml
+        assertions:
+          - violations: yes
+      - name: prod-workload-in-dev-namespace-denied
+        object: samples/mismatch.yaml
+        inventory: [samples/ns-dev.yaml]
+        assertions:
+          - violations: yes
