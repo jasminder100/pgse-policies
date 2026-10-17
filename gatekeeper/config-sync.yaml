@@ -27,3 +27,7 @@ spec:
       - group: policy
         version: v1
         kind: PodDisruptionBudget
+
+      - group: autoscaling
+        version: v2
+        kind: HorizontalPodAutoscaler

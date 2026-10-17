@@ -63,3 +63,9 @@ sed -e 's/web-ok/web-http-url/g' -e 's|repository-url: https://|repository-url: 
   "$BASE" > $P/pillar3-finops/p18-standard-annotations/samples/bad-url.yaml
 # P11: a prod Deployment, checked against a matching PDB / a useless PDB / none
 gen web-pdb $P/pillar2-resources/p11-pdb/samples/deployment.yaml
+# P16: 2 replicas OK / 1 replica / 20 replicas (flagged alone, OK with an HPA)
+gen web-replicas $P/pillar3-finops/p16-replicas/samples/deployment.yaml
+sed -e 's/web-ok/web-single/g' -e 's/^  replicas: 2$/  replicas: 1/' \
+  "$BASE" > $P/pillar3-finops/p16-replicas/samples/one-replica.yaml
+sed -e 's/web-ok/web-many/g' -e 's/^  replicas: 2$/  replicas: 20/' \
+  "$BASE" > $P/pillar3-finops/p16-replicas/samples/twenty-replicas.yaml
