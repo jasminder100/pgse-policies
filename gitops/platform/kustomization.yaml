@@ -9,5 +9,8 @@ resources:
   - ../../namespaces/demo-netpol.yaml
   - ../../namespaces/demo-quota.yaml
   - ../../namespaces/demo.yaml
+  - ../../namespaces/dev-netpol.yaml
+  - ../../namespaces/dev-quota.yaml
+  - ../../namespaces/dev.yaml
   - ../../rbac/app-deploy-rbac.yaml
   - ../../rbac/policy-rbac.yaml
