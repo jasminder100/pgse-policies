@@ -1,0 +1,50 @@
+# Grafana loads this automatically (sidecar watches label grafana_dashboard=1 in monitoring).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgse-gatekeeper-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  pgse-gatekeeper.json: |
+    {
+      "title": "K8s-PGSE / Gatekeeper",
+      "uid": "pgse-gatekeeper",
+      "schemaVersion": 39,
+      "time": {"from": "now-6h", "to": "now"},
+      "refresh": "30s",
+      "templating": {"list": [
+        {"name": "datasource", "label": "Data source", "type": "datasource", "query": "prometheus"}
+      ]},
+      "panels": [
+        {"id": 1, "type": "stat", "title": "Constraints by enforcement action",
+         "gridPos": {"x": 0, "y": 0, "w": 8, "h": 6},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "targets": [{"refId": "A", "expr": "max(gatekeeper_constraints) by (enforcement_action)", "legendFormat": "{{enforcement_action}}"}]},
+        {"id": 2, "type": "stat", "title": "Audit violations by enforcement action",
+         "gridPos": {"x": 8, "y": 0, "w": 8, "h": 6},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "fieldConfig": {"defaults": {"thresholds": {"mode": "absolute", "steps": [
+           {"color": "green", "value": null}, {"color": "red", "value": 1}]}}},
+         "targets": [{"refId": "A", "expr": "max(gatekeeper_violations) by (enforcement_action)", "legendFormat": "{{enforcement_action}}"}]},
+        {"id": 3, "type": "stat", "title": "Seconds since last audit run",
+         "gridPos": {"x": 16, "y": 0, "w": 8, "h": 6},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "fieldConfig": {"defaults": {"unit": "s"}},
+         "targets": [{"refId": "A", "expr": "time() - max(gatekeeper_audit_last_run_time)"}]},
+        {"id": 4, "type": "timeseries", "title": "Admission requests per second by outcome",
+         "gridPos": {"x": 0, "y": 6, "w": 12, "h": 8},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "targets": [{"refId": "A", "expr": "sum(rate(gatekeeper_validation_request_count[5m])) by (admission_status)", "legendFormat": "{{admission_status}}"}]},
+        {"id": 5, "type": "timeseries", "title": "Admission webhook latency (p95)",
+         "gridPos": {"x": 12, "y": 6, "w": 12, "h": 8},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "fieldConfig": {"defaults": {"unit": "s"}},
+         "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum(rate(gatekeeper_validation_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p95"}]},
+        {"id": 6, "type": "stat", "title": "ConstraintTemplates by status",
+         "gridPos": {"x": 0, "y": 14, "w": 8, "h": 5},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "targets": [{"refId": "A", "expr": "max(gatekeeper_constraint_templates) by (status)", "legendFormat": "{{status}}"}]}
+      ]
+    }
