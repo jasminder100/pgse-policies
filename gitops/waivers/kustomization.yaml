@@ -4,5 +4,4 @@ kind: Kustomization
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
-  - ../../waivers/demo-expiry-test-p09.yaml
   - ../../waivers/demo-web-old-p09.yaml
