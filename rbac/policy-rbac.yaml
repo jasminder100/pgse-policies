@@ -51,7 +51,7 @@ roleRef:
   name: pgse-policy-admin
 subjects:
 - kind: Group
-  name: pgse-policy-admins
+  name: "eb925615-794e-42ac-8670-6e8aa819221b"   # Entra group: pgse-policy-admins
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -64,7 +64,7 @@ roleRef:
   name: pgse-policy-viewer
 subjects:
 - kind: Group
-  name: pgse-developers
+  name: "2067c7eb-ce78-4689-b518-d03dc99c72af"   # Entra group: pgse-developers
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -77,5 +77,5 @@ roleRef:
   name: pgse-breakglass
 subjects:
 - kind: Group
-  name: pgse-breakglass
+  name: "33e01255-3d54-42f4-a67c-edca15e20a39"   # Entra group: pgse-breakglass
   apiGroup: rbac.authorization.k8s.io
