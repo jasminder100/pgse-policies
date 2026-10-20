@@ -18,3 +18,4 @@ resources:
   - ../../namespaces/monitoring.yaml
   - ../../rbac/app-deploy-rbac.yaml
   - ../../rbac/policy-rbac.yaml
+  - ../../dashboards/gatekeeper-dashboard.yaml
