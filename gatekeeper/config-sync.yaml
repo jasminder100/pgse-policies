@@ -9,7 +9,7 @@ metadata:
   namespace: gatekeeper-system
 spec:
   match:
-    - excludedNamespaces: ["kube-system", "gatekeeper-system", "argocd"]
+    - excludedNamespaces: ["kube-system", "gatekeeper-system", "argocd", "monitoring"]
       processes: ["audit", "webhook"]
   sync:
     syncOnly:
