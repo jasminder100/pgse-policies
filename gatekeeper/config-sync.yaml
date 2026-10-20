@@ -1,11 +1,16 @@
-# Tells Gatekeeper to replicate PolicyWaiver objects into its data cache (data.inventory),
-# so every ConstraintTemplate can check for an active waiver.
+# Gatekeeper Config:
+# 1. match: central exemption of system namespaces (admission webhook + audit).
+# 2. sync:  replicates these objects into Gatekeeper's data cache (data.inventory),
+#           so ConstraintTemplates can check waivers, quotas, PDBs, netpols, etc.
 apiVersion: config.gatekeeper.sh/v1alpha1
 kind: Config
 metadata:
   name: config
   namespace: gatekeeper-system
 spec:
+  match:
+    - excludedNamespaces: ["kube-system", "gatekeeper-system", "argocd"]
+      processes: ["audit", "webhook"]
   sync:
     syncOnly:
       - group: pgse.io
@@ -14,7 +19,7 @@ spec:
 
       - group: ""
         version: v1
-        kind: namespace
+        kind: Namespace
 
       - group: ""
         version: v1
