@@ -1,0 +1,267 @@
+{
+  "generatedAt": "2026-10-17T18:03:35+00:00",
+  "cluster": "pgse-admin@pgse-trial.ap-south-1.eksctl.io",
+  "summary": {
+    "constraints": 23,
+    "compliantConstraints": 20,
+    "totalViolations": 3,
+    "compliancePercent": 87.0,
+    "violationsByNamespace": {
+      "demo": 3
+    }
+  },
+  "constraints": [
+    {
+      "rule": "P01",
+      "constraint": "p01-no-privileged-containers",
+      "kind": "K8sPgsePrivileged",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P02",
+      "constraint": "p02-disallow-root-users",
+      "kind": "K8sPgseNonRoot",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P03",
+      "constraint": "p03-no-privilege-escalation",
+      "kind": "K8sPgseNoPrivilegeEscalation",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P04",
+      "constraint": "p04-host-namespace-isolation",
+      "kind": "K8sPgseHostNamespaces",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P05",
+      "constraint": "p05-readonly-root-fs-prod",
+      "kind": "K8sPgseReadOnlyRootFs",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P06",
+      "constraint": "p06-restrict-capabilities",
+      "kind": "K8sPgseCapabilities",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P08",
+      "constraint": "p08-require-resource-limits",
+      "kind": "K8sPgseResourceLimits",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P09",
+      "constraint": "p09-no-latest-tag",
+      "kind": "K8sPgseNoLatestTag",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P10",
+      "constraint": "p10-allowed-registries",
+      "kind": "K8sPgseAllowedRegistries",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P11",
+      "constraint": "p11-require-pdb-prod",
+      "kind": "K8sPgsePdb",
+      "enforcementAction": "warn",
+      "totalViolations": 1,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": [
+        {
+          "kind": "Deployment",
+          "namespace": "demo",
+          "name": "web-unlabelled",
+          "message": "[P11] Deployment <web-unlabelled> has no PodDisruptionBudget selecting its pods (with minAvailable > 0 or maxUnavailable < 100%)"
+        }
+      ]
+    },
+    {
+      "rule": "P12",
+      "constraint": "p12-require-probes",
+      "kind": "K8sPgseProbes",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P14",
+      "constraint": "p14-ownership-labels",
+      "kind": "K8sPgseOwnershipLabels",
+      "enforcementAction": "warn",
+      "totalViolations": 1,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": [
+        {
+          "kind": "Deployment",
+          "namespace": "demo",
+          "name": "web-unlabelled",
+          "message": "[P14] Deployment <web-unlabelled> is missing required labels [\"cost-center\", \"owner\", \"team\"]"
+        }
+      ]
+    },
+    {
+      "rule": "P15",
+      "constraint": "p15-environment-label",
+      "kind": "K8sPgseEnvLabel",
+      "enforcementAction": "warn",
+      "totalViolations": 1,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": [
+        {
+          "kind": "Deployment",
+          "namespace": "demo",
+          "name": "web-unlabelled",
+          "message": "[P15] Deployment <web-unlabelled> has environment label <missing>; must be one of [\"dev\", \"staging\", \"prod\"]"
+        }
+      ]
+    },
+    {
+      "rule": "P16",
+      "constraint": "p16-replica-limits-prod",
+      "kind": "K8sPgseReplicas",
+      "enforcementAction": "warn",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P17",
+      "constraint": "p17-namespace-resourcequota",
+      "kind": "K8sPgseResourceQuota",
+      "enforcementAction": "warn",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P18",
+      "constraint": "p18-standard-annotations",
+      "kind": "K8sPgseAnnotations",
+      "enforcementAction": "warn",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P19",
+      "constraint": "p19-ingress-tls",
+      "kind": "K8sPgseIngressTls",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P20",
+      "constraint": "p20-no-loadbalancer-nonprod",
+      "kind": "K8sPgseNoLbNonProd",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P21",
+      "constraint": "p21-default-deny-netpol",
+      "kind": "K8sPgseDefaultDeny",
+      "enforcementAction": "warn",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P22",
+      "constraint": "p22-require-seccomp",
+      "kind": "K8sPgseSeccomp",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P23",
+      "constraint": "p23-restrict-host-ports",
+      "kind": "K8sPgseHostPorts",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P24",
+      "constraint": "p24-no-plaintext-secrets",
+      "kind": "K8sPgsePlaintextSecrets",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    },
+    {
+      "rule": "P25",
+      "constraint": "p25-no-automount-token",
+      "kind": "K8sPgseAutomountToken",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-17T18:03:31Z",
+      "violations": []
+    }
+  ],
+  "waivers": [
+    {
+      "name": "local-path-storage-p08",
+      "state": "ACTIVE",
+      "rule": "P08",
+      "namespace": "local-path-storage",
+      "namePrefix": "local-path-provisioner",
+      "expiresAt": "2026-11-13T00:00:00Z",
+      "ticket": "PGSE-001",
+      "approvedBy": "platform-team",
+      "reason": "kind's built-in storage provisioner ships without resource limits; not used on EKS"
+    },
+    {
+      "name": "demo-web-old-p09",
+      "state": "ACTIVE",
+      "rule": "P09",
+      "namespace": "demo",
+      "namePrefix": "web-old",
+      "expiresAt": "2026-10-22T00:00:00Z",
+      "ticket": "PGSE-002",
+      "approvedBy": "platform-team",
+      "reason": "Legacy web-old still on nginx:latest; pinning planned for next release"
+    }
+  ]
+}
