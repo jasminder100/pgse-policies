@@ -1,0 +1,8 @@
+# Entry point Argo CD syncs. Do not edit layer lists by hand; run scripts/gen-gitops.sh.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - platform
+  - templates
+  - constraints
+  - waivers
