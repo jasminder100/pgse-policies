@@ -1,0 +1,16 @@
+# Default resources for pods that don't set their own (needed because the quota above
+# makes requests/limits mandatory for every pod in this namespace).
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: defaults
+  namespace: monitoring
+spec:
+  limits:
+    - type: Container
+      defaultRequest:
+        cpu: 50m
+        memory: 64Mi
+      default:
+        cpu: 250m
+        memory: 256Mi

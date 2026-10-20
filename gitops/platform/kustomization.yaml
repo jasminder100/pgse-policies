@@ -12,5 +12,9 @@ resources:
   - ../../namespaces/dev-netpol.yaml
   - ../../namespaces/dev-quota.yaml
   - ../../namespaces/dev.yaml
+  - ../../namespaces/monitoring-limits.yaml
+  - ../../namespaces/monitoring-netpol.yaml
+  - ../../namespaces/monitoring-quota.yaml
+  - ../../namespaces/monitoring.yaml
   - ../../rbac/app-deploy-rbac.yaml
   - ../../rbac/policy-rbac.yaml

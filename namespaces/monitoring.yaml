@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    owner: platform-team
+    team: pgse
+    cost-center: cc-1001
+    environment: prod
