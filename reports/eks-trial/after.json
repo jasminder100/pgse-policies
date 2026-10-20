@@ -1,0 +1,74 @@
+{
+  "generatedAt": "2026-10-14T14:18:30+00:00",
+  "cluster": "kind-pgse",
+  "summary": {
+    "constraints": 3,
+    "compliantConstraints": 2,
+    "totalViolations": 3,
+    "compliancePercent": 66.7,
+    "violationsByNamespace": {
+      "demo": 3
+    }
+  },
+  "constraints": [
+    {
+      "rule": "P01",
+      "constraint": "p01-no-privileged-containers",
+      "kind": "K8sPgsePrivileged",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-14T14:17:46Z",
+      "violations": []
+    },
+    {
+      "rule": "P08",
+      "constraint": "p08-require-resource-limits",
+      "kind": "K8sPgseResourceLimits",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-14T14:17:46Z",
+      "violations": []
+    },
+    {
+      "rule": "P09",
+      "constraint": "p09-no-latest-tag",
+      "kind": "K8sPgseNoLatestTag",
+      "enforcementAction": "deny",
+      "totalViolations": 3,
+      "auditTimestamp": "2026-10-14T14:17:46Z",
+      "violations": [
+        {
+          "kind": "ReplicaSet",
+          "namespace": "demo",
+          "name": "web-old-7c7455f499",
+          "message": "[P09] container <web> in ReplicaSet <web-old-7c7455f499> uses image <nginx:latest>; pin an explicit version tag or digest (not :latest)"
+        },
+        {
+          "kind": "Deployment",
+          "namespace": "demo",
+          "name": "web-old",
+          "message": "[P09] container <web> in Deployment <web-old> uses image <nginx:latest>; pin an explicit version tag or digest (not :latest)"
+        },
+        {
+          "kind": "Pod",
+          "namespace": "demo",
+          "name": "web-old-7c7455f499-kgbs8",
+          "message": "[P09] container <web> in Pod <web-old-7c7455f499-kgbs8> uses image <nginx:latest>; pin an explicit version tag or digest (not :latest)"
+        }
+      ]
+    }
+  ],
+  "waivers": [
+    {
+      "name": "local-path-storage-p08",
+      "state": "ACTIVE",
+      "rule": "P08",
+      "namespace": "local-path-storage",
+      "namePrefix": "local-path-provisioner",
+      "expiresAt": "2026-11-13T00:00:00Z",
+      "ticket": "PGSE-001",
+      "approvedBy": "platform-team",
+      "reason": "kind's built-in storage provisioner ships without resource limits; not used on EKS"
+    }
+  ]
+}

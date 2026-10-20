@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-10-15T15:59:27+00:00",
+  "cluster": "arn:aws:eks:ap-south-1:563675986491:cluster/pgse-trial",
+  "summary": {
+    "constraints": 3,
+    "compliantConstraints": 3,
+    "totalViolations": 0,
+    "compliancePercent": 100.0,
+    "violationsByNamespace": {}
+  },
+  "constraints": [
+    {
+      "rule": "P01",
+      "constraint": "p01-no-privileged-containers",
+      "kind": "K8sPgsePrivileged",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-15T15:58:59Z",
+      "violations": []
+    },
+    {
+      "rule": "P08",
+      "constraint": "p08-require-resource-limits",
+      "kind": "K8sPgseResourceLimits",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-15T15:58:59Z",
+      "violations": []
+    },
+    {
+      "rule": "P09",
+      "constraint": "p09-no-latest-tag",
+      "kind": "K8sPgseNoLatestTag",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-15T15:58:59Z",
+      "violations": []
+    }
+  ],
+  "waivers": [
+    {
+      "name": "local-path-storage-p08",
+      "state": "ACTIVE",
+      "rule": "P08",
+      "namespace": "local-path-storage",
+      "namePrefix": "local-path-provisioner",
+      "expiresAt": "2026-11-13T00:00:00Z",
+      "ticket": "PGSE-001",
+      "approvedBy": "platform-team",
+      "reason": "kind's built-in storage provisioner ships without resource limits; not used on EKS"
+    },
+    {
+      "name": "demo-web-old-p09",
+      "state": "ACTIVE",
+      "rule": "P09",
+      "namespace": "demo",
+      "namePrefix": "web-old",
+      "expiresAt": "2026-10-22T00:00:00Z",
+      "ticket": "PGSE-002",
+      "approvedBy": "platform-team",
+      "reason": "Legacy web-old still on nginx:latest; pinning planned for next release"
+    }
+  ]
+}

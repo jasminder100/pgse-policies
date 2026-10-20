@@ -1,0 +1,136 @@
+{
+  "generatedAt": "2026-10-14T14:14:45+00:00",
+  "cluster": "kind-pgse",
+  "summary": {
+    "constraints": 3,
+    "compliantConstraints": 1,
+    "totalViolations": 15,
+    "compliancePercent": 33.3,
+    "violationsByNamespace": {
+      "local-path-storage": 12,
+      "demo": 3
+    }
+  },
+  "constraints": [
+    {
+      "rule": "P01",
+      "constraint": "p01-no-privileged-containers",
+      "kind": "K8sPgsePrivileged",
+      "enforcementAction": "deny",
+      "totalViolations": 0,
+      "auditTimestamp": "2026-10-14T14:13:46Z",
+      "violations": []
+    },
+    {
+      "rule": "P08",
+      "constraint": "p08-require-resource-limits",
+      "kind": "K8sPgseResourceLimits",
+      "enforcementAction": "deny",
+      "totalViolations": 12,
+      "auditTimestamp": "2026-10-14T14:13:46Z",
+      "violations": [
+        {
+          "kind": "ReplicaSet",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner-7dc846544d",
+          "message": "[P08] container <local-path-provisioner> in ReplicaSet <local-path-provisioner-7dc846544d> is missing resources.requests.memory"
+        },
+        {
+          "kind": "ReplicaSet",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner-7dc846544d",
+          "message": "[P08] container <local-path-provisioner> in ReplicaSet <local-path-provisioner-7dc846544d> is missing resources.requests.cpu"
+        },
+        {
+          "kind": "ReplicaSet",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner-7dc846544d",
+          "message": "[P08] container <local-path-provisioner> in ReplicaSet <local-path-provisioner-7dc846544d> is missing resources.limits.memory"
+        },
+        {
+          "kind": "ReplicaSet",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner-7dc846544d",
+          "message": "[P08] container <local-path-provisioner> in ReplicaSet <local-path-provisioner-7dc846544d> is missing resources.limits.cpu"
+        },
+        {
+          "kind": "Deployment",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner",
+          "message": "[P08] container <local-path-provisioner> in Deployment <local-path-provisioner> is missing resources.requests.memory"
+        },
+        {
+          "kind": "Deployment",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner",
+          "message": "[P08] container <local-path-provisioner> in Deployment <local-path-provisioner> is missing resources.requests.cpu"
+        },
+        {
+          "kind": "Deployment",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner",
+          "message": "[P08] container <local-path-provisioner> in Deployment <local-path-provisioner> is missing resources.limits.memory"
+        },
+        {
+          "kind": "Deployment",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner",
+          "message": "[P08] container <local-path-provisioner> in Deployment <local-path-provisioner> is missing resources.limits.cpu"
+        },
+        {
+          "kind": "Pod",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner-7dc846544d-8fhlf",
+          "message": "[P08] container <local-path-provisioner> in Pod <local-path-provisioner-7dc846544d-8fhlf> is missing resources.requests.memory"
+        },
+        {
+          "kind": "Pod",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner-7dc846544d-8fhlf",
+          "message": "[P08] container <local-path-provisioner> in Pod <local-path-provisioner-7dc846544d-8fhlf> is missing resources.requests.cpu"
+        },
+        {
+          "kind": "Pod",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner-7dc846544d-8fhlf",
+          "message": "[P08] container <local-path-provisioner> in Pod <local-path-provisioner-7dc846544d-8fhlf> is missing resources.limits.memory"
+        },
+        {
+          "kind": "Pod",
+          "namespace": "local-path-storage",
+          "name": "local-path-provisioner-7dc846544d-8fhlf",
+          "message": "[P08] container <local-path-provisioner> in Pod <local-path-provisioner-7dc846544d-8fhlf> is missing resources.limits.cpu"
+        }
+      ]
+    },
+    {
+      "rule": "P09",
+      "constraint": "p09-no-latest-tag",
+      "kind": "K8sPgseNoLatestTag",
+      "enforcementAction": "deny",
+      "totalViolations": 3,
+      "auditTimestamp": "2026-10-14T14:13:46Z",
+      "violations": [
+        {
+          "kind": "ReplicaSet",
+          "namespace": "demo",
+          "name": "web-old-7c7455f499",
+          "message": "[P09] container <web> in ReplicaSet <web-old-7c7455f499> uses image <nginx:latest>; pin an explicit version tag or digest (not :latest)"
+        },
+        {
+          "kind": "Deployment",
+          "namespace": "demo",
+          "name": "web-old",
+          "message": "[P09] container <web> in Deployment <web-old> uses image <nginx:latest>; pin an explicit version tag or digest (not :latest)"
+        },
+        {
+          "kind": "Pod",
+          "namespace": "demo",
+          "name": "web-old-7c7455f499-kgbs8",
+          "message": "[P09] container <web> in Pod <web-old-7c7455f499-kgbs8> uses image <nginx:latest>; pin an explicit version tag or digest (not :latest)"
+        }
+      ]
+    }
+  ],
+  "waivers": []
+}
