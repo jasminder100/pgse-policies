@@ -24,6 +24,7 @@ gen platform    0 crds/*.yaml gatekeeper/*.yaml namespaces/*.yaml rbac/*.yaml
 gen templates   1 $(find policies -name template.yaml   | sort)
 gen constraints 2 $(find policies -name constraint.yaml | sort)
 gen waivers     3 waivers/*.yaml
+gen apps        4 apps/*.yaml
 
 cat > gitops/kustomization.yaml <<'KEOF'
 # Entry point Argo CD syncs. Do not edit layer lists by hand; run scripts/gen-gitops.sh.
@@ -34,6 +35,7 @@ resources:
   - templates
   - constraints
   - waivers
+  - apps
 KEOF
 
 echo "gitops/ regenerated"

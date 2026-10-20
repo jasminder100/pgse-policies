@@ -1,0 +1,69 @@
+# Prometheus + Grafana, installed by Argo CD (app-of-apps, wave 4).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 92.11.0
+    helm:
+      valuesObject:
+        # Trimmed for a 2-node demo cluster
+        defaultRules: {create: false}
+        alertmanager: {enabled: false}
+        nodeExporter: {enabled: false}        # needs hostNetwork/hostPID
+        kubeStateMetrics: {enabled: false}
+        # AKS manages the control plane; these can't be scraped
+        kubeApiServer: {enabled: false}
+        kubeEtcd: {enabled: false}
+        kubeControllerManager: {enabled: false}
+        kubeScheduler: {enabled: false}
+        kubeProxy: {enabled: false}
+        coreDns: {enabled: false}
+
+        prometheusOperator:
+          admissionWebhooks: {enabled: false}  # monitoring ns is default-deny ingress
+          tls: {enabled: false}                # its cert came from the webhook job
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits:   {cpu: 200m, memory: 256Mi}
+
+        prometheus:
+          prometheusSpec:
+            retention: 2d
+            serviceMonitorSelectorNilUsesHelmValues: false
+            podMonitorSelectorNilUsesHelmValues: false
+            resources:
+              requests: {cpu: 100m, memory: 512Mi}
+              limits:   {cpu: 500m, memory: 1Gi}
+          additionalPodMonitors:
+            - name: gatekeeper
+              namespaceSelector: {matchNames: [gatekeeper-system]}
+              selector: {matchLabels: {gatekeeper.sh/system: "yes"}}
+              podMetricsEndpoints:
+                - port: metrics
+                  interval: 30s
+
+        grafana:
+          admin:
+            existingSecret: grafana-admin     # created by hand, never in git
+            userKey: admin-user
+            passwordKey: admin-password
+          testFramework: {enabled: false}
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits:   {cpu: 250m, memory: 256Mi}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions:
+      - ServerSideApply=true   # the operator's CRDs are too large for normal apply
+    retry:
+      limit: 5
+      backoff: {duration: 20s, factor: 2, maxDuration: 3m}
