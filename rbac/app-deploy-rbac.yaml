@@ -28,5 +28,5 @@ roleRef:
   name: pgse-app-deployer
 subjects:
 - kind: Group
-  name: pgse-deployers
+  name: "4502bcd2-a69d-4de9-9225-008932b62f71"   # Entra group: pgse-deployers
   apiGroup: rbac.authorization.k8s.io
