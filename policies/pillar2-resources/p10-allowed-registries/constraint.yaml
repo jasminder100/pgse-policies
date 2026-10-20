@@ -15,5 +15,4 @@ spec:
     excludedNamespaces: ["kube-system", "gatekeeper-system"]
   parameters:
     allowedRegistries:
-      - "563675986491.dkr.ecr.ap-south-1.amazonaws.com"   # our own ECR account only
-      - "*.azurecr.io"                                    # narrow to our ACR name on AKS
+      - "pgseacrjs2026.azurecr.io"   # our own ACR only (exact host match)
