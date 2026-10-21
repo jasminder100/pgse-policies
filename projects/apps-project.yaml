@@ -1,0 +1,22 @@
+# Boundary for application deploys: even if something bad were merged into the app repo,
+# Argo CD may only create these namespaced kinds in demo/dev, and nothing cluster-wide.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  description: Application workloads (least privilege for Argo CD)
+  sourceRepos:
+    - https://github.com/jasminder100/pgse-sample-app.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: demo
+    - server: https://kubernetes.default.svc
+      namespace: dev
+  clusterResourceWhitelist: []          # nothing cluster-scoped
+  namespaceResourceWhitelist:
+    - {group: apps,   kind: Deployment}
+    - {group: policy, kind: PodDisruptionBudget}
+    - {group: "",     kind: Service}
+    - {group: "",     kind: ConfigMap}

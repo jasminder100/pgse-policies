@@ -5,3 +5,4 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "4"
 resources:
   - ../../apps/monitoring.yaml
+  - ../../apps/pgse-sample-app.yaml
