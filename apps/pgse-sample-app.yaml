@@ -1,0 +1,23 @@
+# The sample app, deployed by Argo CD from git (wave 4: after all policies are in place).
+# To release: bump the image tag in pgse-sample-app/k8s/deployment.yaml via a PR.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pgse-sample-app
+  namespace: argocd
+spec:
+  project: apps
+  source:
+    repoURL: https://github.com/jasminder100/pgse-sample-app.git
+    targetRevision: main
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff: {duration: 20s, factor: 2, maxDuration: 3m}

@@ -19,3 +19,4 @@ resources:
   - ../../rbac/app-deploy-rbac.yaml
   - ../../rbac/policy-rbac.yaml
   - ../../dashboards/gatekeeper-dashboard.yaml
+  - ../../projects/apps-project.yaml

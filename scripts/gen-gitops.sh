@@ -20,7 +20,7 @@ gen() {  # gen <layer> <wave> <files...>
   } > "gitops/$layer/kustomization.yaml"
 }
 
-gen platform    0 crds/*.yaml gatekeeper/*.yaml namespaces/*.yaml rbac/*.yaml dashboards/*.yaml
+gen platform    0 crds/*.yaml gatekeeper/*.yaml namespaces/*.yaml rbac/*.yaml dashboards/*.yaml projects/*.yaml
 gen templates   1 $(find policies -name template.yaml   | sort)
 gen constraints 2 $(find policies -name constraint.yaml | sort)
 gen waivers     3 waivers/*.yaml
