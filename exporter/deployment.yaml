@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgse-exporter
+  namespace: monitoring
+  labels: {app: pgse-exporter, owner: platform-team, team: pgse, cost-center: cc-1001, environment: prod}
+  annotations:
+    app.kubernetes.io/managed-by: argocd
+    repository-url: https://github.com/jasminder100/pgse-policies
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: pgse-exporter}
+  template:
+    metadata:
+      labels: {app: pgse-exporter}
+    spec:
+      serviceAccountName: pgse-exporter     # needs its token to read the API
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: exporter
+          image: pgseacrjs2026.azurecr.io/mirror/python:3.12-alpine
+          command: ["python3", "/app/pgse-exporter.py"]
+          env:
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: PYTHONUNBUFFERED, value: "1"}
+          ports:
+            - {name: metrics, containerPort: 9101}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits:   {cpu: 100m, memory: 64Mi}
+          readinessProbe: {httpGet: {path: /healthz, port: 9101}}
+          livenessProbe:  {httpGet: {path: /healthz, port: 9101}}
+          volumeMounts:
+            - {name: script, mountPath: /app}
+      volumes:
+        - name: script
+          configMap: {name: pgse-exporter}

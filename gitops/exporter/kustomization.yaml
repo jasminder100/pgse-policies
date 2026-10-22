@@ -1,0 +1,15 @@
+# Hand-written (not generated): the ConfigMap is built from scripts/pgse-exporter.py.
+# Wave 5: after the monitoring stack (wave 4) has created the PodMonitor CRD.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonAnnotations:
+  argocd.argoproj.io/sync-wave: "5"
+resources:
+  - ../../exporter/rbac.yaml
+  - ../../exporter/deployment.yaml
+  - ../../exporter/podmonitor.yaml
+configMapGenerator:
+  - name: pgse-exporter
+    namespace: monitoring
+    files:
+      - pgse-exporter.py=../../scripts/pgse-exporter.py

@@ -1,0 +1,11 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: pgse-exporter
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels: {app: pgse-exporter}
+  podMetricsEndpoints:
+    - port: metrics
+      interval: 30s
