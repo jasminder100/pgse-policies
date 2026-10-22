@@ -13,3 +13,6 @@ spec:
       - apiGroups: ["batch"]
         kinds: ["Job", "CronJob"]
     excludedNamespaces: ["kube-system", "gatekeeper-system"]
+  parameters:
+    allowedServiceAccounts:
+      - "dev/config-reader"   # built-in exception: reads ConfigMaps through the Kubernetes API

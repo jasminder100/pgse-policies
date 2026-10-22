@@ -23,3 +23,15 @@ tests:
         object: samples/sa-disallowed.yaml
         assertions:
           - violations: yes
+      - name: approved-service-account-workload
+        object: samples/approved-sa-workload.yaml
+        assertions:
+          - violations: no
+      - name: unapproved-service-account-workload
+        object: samples/unapproved-sa-workload.yaml
+        assertions:
+          - violations: yes
+      - name: approved-serviceaccount-object
+        object: samples/sa-approved.yaml
+        assertions:
+          - violations: no
