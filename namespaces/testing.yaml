@@ -4,7 +4,7 @@ metadata:
   name: testing
   labels:
     environment: dev
-    pgse.io/policy-exception: testing   # built-in exception: relaxes P09, P10, P12
+    pgse.io/policy-exception: testing   # built-in exception: relaxes P09, P12
     owner: platform-team
     team: pgse
     cost-center: cc-1001
