@@ -3,25 +3,39 @@ apiVersion: test.gatekeeper.sh/v1alpha1
 metadata:
   name: p09-no-latest-tag
 tests:
-  - name: p09-no-latest-tag
-    template: template.yaml
-    constraint: constraint.yaml
-    cases:
-      - name: allowed-sample
-        object: samples/allowed.yaml
-        assertions:
-          - violations: no
-      - name: disallowed-sample
-        object: samples/disallowed.yaml
-        assertions:
-          - violations: yes
-      - name: disallowed-sample-with-valid-waiver
-        object: samples/disallowed.yaml
-        inventory: [samples/waiver-valid.yaml]
-        assertions:
-          - violations: no
-      - name: disallowed-sample-with-expired-waiver
-        object: samples/disallowed.yaml
-        inventory: [samples/waiver-expired.yaml]
-        assertions:
-          - violations: yes
+- name: p09-no-latest-tag
+  template: template.yaml
+  constraint: constraint.yaml
+  cases:
+  - name: allowed-sample
+    object: samples/allowed.yaml
+    assertions:
+    - violations: no
+    inventory:
+    - samples/ns-demo.yaml
+  - name: disallowed-sample
+    object: samples/disallowed.yaml
+    assertions:
+    - violations: yes
+    inventory:
+    - samples/ns-demo.yaml
+  - name: disallowed-sample-with-valid-waiver
+    object: samples/disallowed.yaml
+    inventory:
+    - samples/waiver-valid.yaml
+    - samples/ns-demo.yaml
+    assertions:
+    - violations: no
+  - name: disallowed-sample-with-expired-waiver
+    object: samples/disallowed.yaml
+    inventory:
+    - samples/waiver-expired.yaml
+    - samples/ns-demo.yaml
+    assertions:
+    - violations: yes
+  - name: exempt-in-testing-namespace
+    object: samples/disallowed-in-testing.yaml
+    inventory:
+    - samples/ns-testing.yaml
+    assertions:
+    - violations: no

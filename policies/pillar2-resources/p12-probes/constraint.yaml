@@ -10,4 +10,9 @@ spec:
         kinds: ["Pod"]
       - apiGroups: ["apps"]
         kinds: ["Deployment", "StatefulSet", "DaemonSet", "ReplicaSet"]
+    namespaceSelector:          # built-in exception: namespaces labelled pgse.io/policy-exception=testing are exempt
+      matchExpressions:
+        - key: pgse.io/policy-exception
+          operator: NotIn
+          values: ["testing"]
     excludedNamespaces: ["kube-system", "gatekeeper-system"]
