@@ -25,9 +25,9 @@ tests:
     - violations: no
     inventory:
     - samples/ns-demo.yaml
-  - name: exempt-in-testing-namespace
+  - name: still-enforced-in-testing-namespace
     object: samples/disallowed-in-testing.yaml
     inventory:
     - samples/ns-testing.yaml
     assertions:
-    - violations: no
+    - violations: yes
