@@ -3,15 +3,25 @@ apiVersion: test.gatekeeper.sh/v1alpha1
 metadata:
   name: p12-probes
 tests:
-  - name: p12-probes
-    template: template.yaml
-    constraint: constraint.yaml
-    cases:
-      - name: allowed-sample
-        object: samples/allowed.yaml
-        assertions:
-          - violations: no
-      - name: disallowed-sample
-        object: samples/disallowed.yaml
-        assertions:
-          - violations: yes
+- name: p12-probes
+  template: template.yaml
+  constraint: constraint.yaml
+  cases:
+  - name: allowed-sample
+    object: samples/allowed.yaml
+    assertions:
+    - violations: no
+    inventory:
+    - samples/ns-demo.yaml
+  - name: disallowed-sample
+    object: samples/disallowed.yaml
+    assertions:
+    - violations: yes
+    inventory:
+    - samples/ns-demo.yaml
+  - name: exempt-in-testing-namespace
+    object: samples/disallowed-in-testing.yaml
+    inventory:
+    - samples/ns-testing.yaml
+    assertions:
+    - violations: no

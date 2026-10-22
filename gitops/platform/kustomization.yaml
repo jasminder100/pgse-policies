@@ -16,6 +16,9 @@ resources:
   - ../../namespaces/monitoring-netpol.yaml
   - ../../namespaces/monitoring-quota.yaml
   - ../../namespaces/monitoring.yaml
+  - ../../namespaces/testing-netpol.yaml
+  - ../../namespaces/testing-quota.yaml
+  - ../../namespaces/testing.yaml
   - ../../rbac/policy-rbac.yaml
   - ../../dashboards/gatekeeper-dashboard.yaml
   - ../../projects/apps-project.yaml
