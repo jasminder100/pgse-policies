@@ -36,7 +36,7 @@ data:
         {"id": 4, "type": "timeseries", "title": "Admission requests per second by outcome",
          "gridPos": {"x": 0, "y": 6, "w": 12, "h": 8},
          "datasource": {"type": "prometheus", "uid": "${datasource}"},
-         "targets": [{"refId": "A", "expr": "sum(rate(gatekeeper_validation_request_count[5m])) by (admission_status)", "legendFormat": "{{admission_status}}"}]},
+         "targets": [{"refId": "A", "expr": "sum(rate(gatekeeper_validation_request_count_total[5m])) by (admission_status)", "legendFormat": "{{admission_status}}"}]},
         {"id": 5, "type": "timeseries", "title": "Admission webhook latency (p95)",
          "gridPos": {"x": 12, "y": 6, "w": 12, "h": 8},
          "datasource": {"type": "prometheus", "uid": "${datasource}"},
