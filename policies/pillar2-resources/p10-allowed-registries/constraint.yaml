@@ -16,3 +16,5 @@ spec:
   parameters:
     allowedRegistries:
       - "pgseacrjs2026.azurecr.io"   # our own ACR only (exact host match)
+    allowedImages:
+      - "docker.io/library/postgres"   # built-in exception: approved image from Docker Hub

@@ -15,3 +15,7 @@ tests:
         object: samples/disallowed.yaml
         assertions:
           - violations: yes
+      - name: approved-image-postgres
+        object: samples/allowed-postgres.yaml
+        assertions:
+          - violations: no
