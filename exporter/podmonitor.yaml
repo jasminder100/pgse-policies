@@ -8,4 +8,5 @@ spec:
     matchLabels: {app: pgse-exporter}
   podMetricsEndpoints:
     - port: metrics
+      honorLabels: true
       interval: 30s
