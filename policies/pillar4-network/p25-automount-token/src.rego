@@ -10,7 +10,8 @@ rule_id := "P25"
 violation contains {"msg": msg} if {
 	not waived
 	object.get(pod_spec, "automountServiceAccountToken", null) != false
-	msg := sprintf("[P25] %v <%v> must set spec.automountServiceAccountToken: false (request a waiver if the app needs the Kubernetes API)", [input.review.object.kind, obj_name])
+	not sa_allowed(obj_namespace, workload_sa)
+	msg := sprintf("[P25] %v <%v> must set spec.automountServiceAccountToken: false (if the app needs the Kubernetes API, use an approved service account or request a waiver)", [input.review.object.kind, obj_name])
 }
 
 # Rule 25b: ServiceAccounts must also disable automount, except the auto-created "default"
@@ -18,9 +19,22 @@ violation contains {"msg": msg} if {
 	not waived
 	input.review.object.kind == "ServiceAccount"
 	obj_name != "default"
+	not sa_allowed(obj_namespace, obj_name)
 	object.get(input.review.object, "automountServiceAccountToken", null) != false
 	msg := sprintf("[P25] ServiceAccount <%v> must set automountServiceAccountToken: false", [obj_name])
 }
+
+# --- built-in exception: approved service accounts ("namespace/name") may use the API token ---
+# The "default" service account can never be approved: every pod without an explicit
+# serviceAccountName uses it, so approving it would silently exempt the whole namespace.
+allowed_service_accounts := object.get(object.get(input, "parameters", {}), "allowedServiceAccounts", [])
+
+sa_allowed(ns, name) if {
+	name != "default"
+	sprintf("%v/%v", [ns, name]) in allowed_service_accounts
+}
+
+workload_sa := object.get(pod_spec, "serviceAccountName", object.get(pod_spec, "serviceAccount", "default"))
 
 # --- shared helper: find the pod spec in any workload kind ---
 pod_spec := input.review.object.spec if input.review.object.kind == "Pod"
