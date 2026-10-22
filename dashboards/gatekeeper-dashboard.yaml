@@ -45,6 +45,47 @@ data:
         {"id": 6, "type": "stat", "title": "ConstraintTemplates by status",
          "gridPos": {"x": 0, "y": 14, "w": 8, "h": 5},
          "datasource": {"type": "prometheus", "uid": "${datasource}"},
-         "targets": [{"refId": "A", "expr": "max(gatekeeper_constraint_templates) by (status)", "legendFormat": "{{status}}"}]}
+         "targets": [{"refId": "A", "expr": "max(gatekeeper_constraint_templates) by (status)", "legendFormat": "{{status}}"}]},
+        {"id": 7, "type": "stat", "title": "Compliance (rules with zero violations)",
+         "gridPos": {"x": 8, "y": 14, "w": 8, "h": 5},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "fieldConfig": {"defaults": {"unit": "percent", "thresholds": {"mode": "absolute", "steps": [
+           {"color": "red", "value": null}, {"color": "orange", "value": 90}, {"color": "green", "value": 100}]}}},
+         "targets": [{"refId": "A", "expr": "pgse_compliance_percent"}]},
+        {"id": 8, "type": "stat", "title": "Compliance exporter",
+         "gridPos": {"x": 16, "y": 14, "w": 8, "h": 5},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "fieldConfig": {"defaults": {"mappings": [{"type": "value", "options": {
+           "0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}}]}},
+         "targets": [{"refId": "A", "expr": "max(pgse_exporter_up)"}]},
+        {"id": 9, "type": "bargauge", "title": "Violations per rule",
+         "gridPos": {"x": 0, "y": 19, "w": 24, "h": 7},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "options": {"orientation": "horizontal", "displayMode": "basic"},
+         "fieldConfig": {"defaults": {"noValue": "No violations", "thresholds": {"mode": "absolute", "steps": [
+           {"color": "green", "value": null}, {"color": "red", "value": 1}]}}},
+         "targets": [{"refId": "A", "expr": "sort_desc(max by (rule, action) (pgse_constraint_violations) > 0)", "legendFormat": "{{rule}} ({{action}})", "instant": true}]},
+        {"id": 10, "type": "table", "title": "Non-compliant resources",
+         "gridPos": {"x": 0, "y": 26, "w": 24, "h": 9},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "fieldConfig": {"defaults": {"noValue": "No non-compliant resources"}},
+         "targets": [{"refId": "A", "expr": "max by (rule, action, namespace, kind, name, message) (pgse_violation)", "format": "table", "instant": true}],
+         "transformations": [{"id": "organize", "options": {
+           "excludeByName": {"Time": true, "Value": true},
+           "indexByName": {"rule": 0, "action": 1, "namespace": 2, "kind": 3, "name": 4, "message": 5},
+           "renameByName": {"rule": "Rule", "action": "Action", "namespace": "Namespace", "kind": "Kind", "name": "Resource", "message": "Why"}}}]},
+        {"id": 11, "type": "table", "title": "Waivers",
+         "gridPos": {"x": 0, "y": 35, "w": 24, "h": 6},
+         "datasource": {"type": "prometheus", "uid": "${datasource}"},
+         "fieldConfig": {"defaults": {"noValue": "No waivers"},
+           "overrides": [{"matcher": {"id": "byName", "options": "Status"}, "properties": [
+             {"id": "mappings", "value": [{"type": "value", "options": {
+               "0": {"text": "Expired", "color": "red"}, "1": {"text": "Active", "color": "green"}}}]},
+             {"id": "custom.cellOptions", "value": {"type": "color-text"}}]}]},
+         "targets": [{"refId": "A", "expr": "max by (ticket, rule, namespace, prefix, expires) (pgse_waiver_active)", "format": "table", "instant": true}],
+         "transformations": [{"id": "organize", "options": {
+           "excludeByName": {"Time": true},
+           "indexByName": {"ticket": 0, "rule": 1, "namespace": 2, "prefix": 3, "expires": 4, "Value": 5},
+           "renameByName": {"ticket": "Ticket", "rule": "Rule", "namespace": "Namespace", "prefix": "Name prefix", "expires": "Expires", "Value": "Status"}}}]}
       ]
     }

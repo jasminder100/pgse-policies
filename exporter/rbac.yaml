@@ -1,0 +1,31 @@
+# Read-only: the exporter can only read constraints and waivers.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pgse-exporter
+  namespace: monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pgse-exporter-read
+rules:
+- apiGroups: ["constraints.gatekeeper.sh"]
+  resources: ["*"]
+  verbs: ["get", "list"]
+- apiGroups: ["pgse.io"]
+  resources: ["policywaivers"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pgse-exporter-read
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pgse-exporter-read
+subjects:
+- kind: ServiceAccount
+  name: pgse-exporter
+  namespace: monitoring

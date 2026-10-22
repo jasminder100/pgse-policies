@@ -36,6 +36,7 @@ resources:
   - constraints
   - waivers
   - apps
+  - exporter
 KEOF
 
 echo "gitops/ regenerated"
