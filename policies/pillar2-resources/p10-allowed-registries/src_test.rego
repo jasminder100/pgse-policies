@@ -90,3 +90,22 @@ test_valid_waiver_exempts if {
 	}}}}}}
 	count(violation) == 0 with input as img("nginx:1.27") with data.inventory as waivers
 }
+
+# --- built-in exception: approved images (allowedImages) ---
+pg_params := {"allowedRegistries": ["pgseacr.azurecr.io"], "allowedImages": ["docker.io/library/postgres"]}
+
+pg_input(image, params) := {"parameters": params, "review": {"object": {
+	"kind": "Pod", "metadata": {"name": "db", "namespace": "demo"},
+	"spec": {"containers": [{"name": "db", "image": image}]}}}}
+
+test_approved_image_short_name_allowed if count(violation) == 0 with input as pg_input("postgres:16.4", pg_params)
+test_approved_image_full_name_allowed if count(violation) == 0 with input as pg_input("docker.io/library/postgres:16.4", pg_params)
+test_approved_image_index_alias_allowed if count(violation) == 0 with input as pg_input("index.docker.io/library/postgres:16.4", pg_params)
+test_approved_image_digest_allowed if count(violation) == 0 with input as pg_input("postgres@sha256:0123abcd", pg_params)
+test_approved_image_param_short_form if count(violation) == 0 with input as pg_input("docker.io/library/postgres:16.4", {"allowedRegistries": [], "allowedImages": ["postgres"]})
+test_lookalike_user_repo_denied if count(violation) == 1 with input as pg_input("someone/postgres:16.4", pg_params)
+test_similar_name_denied if count(violation) == 1 with input as pg_input("postgres-exporter:1.0", pg_params)
+test_other_dockerhub_image_denied if count(violation) == 1 with input as pg_input("nginx:1.27", pg_params)
+test_postgres_other_registry_denied if count(violation) == 1 with input as pg_input("ghcr.io/library/postgres:16", pg_params)
+test_acr_still_allowed if count(violation) == 0 with input as pg_input("pgseacr.azurecr.io/app:v1", pg_params)
+test_no_exception_without_param if count(violation) == 1 with input as pg_input("postgres:16.4", {"allowedRegistries": ["pgseacr.azurecr.io"]})

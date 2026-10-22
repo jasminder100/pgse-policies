@@ -6,13 +6,15 @@ import future.keywords.in
 
 rule_id := "P10"
 
-# Rule 10: every image must come from an approved registry.
+# Rule 10: every image must come from an approved registry,
+# or be an explicitly approved image (built-in exception, e.g. docker.io/library/postgres).
 violation contains {"msg": msg} if {
 	not waived
 	some c in containers
 	reg := registry_of(c.image)
 	not approved(reg)
-	msg := sprintf("[P10] container <%v> in %v <%v> uses image <%v> from registry <%v>; allowed registries: %v", [c.name, input.review.object.kind, obj_name, c.image, reg, allowed_registries])
+	not image_allowed(c.image)
+	msg := sprintf("[P10] container <%v> in %v <%v> uses image <%v> from registry <%v>; allowed registries: %v; approved images: %v", [c.name, input.review.object.kind, obj_name, c.image, reg, allowed_registries, allowed_images])
 }
 
 # The first path segment is a registry only if it looks like a host (has "." or ":" or is "localhost").
@@ -48,6 +50,49 @@ approved(reg) if {
 }
 
 allowed_registries := object.get(object.get(input, "parameters", {}), "allowedRegistries", [])
+
+# --- built-in exception: approved images (exact repository match, any pinned tag or digest) ---
+allowed_images := object.get(object.get(input, "parameters", {}), "allowedImages", [])
+
+image_allowed(image) if {
+	some a in allowed_images
+	repository_of(a) == repository_of(image)
+}
+
+# Fully qualified repository without tag/digest: "postgres:16.4" -> "docker.io/library/postgres"
+repository_of(image) := lower(concat("/", qualified(path_of(image))))
+
+# "host:5000/team/app:1.2@sha256:..." -> ["host:5000", "team", "app"]
+path_of(image) := array.concat(array.slice(parts, 0, count(parts) - 1), [name]) if {
+	parts := split(split(image, "@")[0], "/")
+	name := split(parts[count(parts) - 1], ":")[0]
+}
+
+qualified(p) := ["docker.io", "library", p[0]] if count(p) == 1
+
+qualified(p) := array.concat(["docker.io"], p) if {
+	count(p) > 1
+	not looks_like_host(p[0])
+}
+
+qualified(p) := array.concat([host], library_path(host, array.slice(p, 1, count(p)))) if {
+	count(p) > 1
+	looks_like_host(p[0])
+	host := docker_host(lower(p[0]))
+}
+
+docker_host(h) := "docker.io" if h in {"docker.io", "index.docker.io"}
+
+docker_host(h) := h if not h in {"docker.io", "index.docker.io"}
+
+library_path(host, rest) := array.concat(["library"], rest) if dockerhub_single(host, rest)
+
+library_path(host, rest) := rest if not dockerhub_single(host, rest)
+
+dockerhub_single(host, rest) if {
+	host == "docker.io"
+	count(rest) == 1
+}
 
 # --- shared helper: find the pod spec in any workload kind ---
 pod_spec := input.review.object.spec if input.review.object.kind == "Pod"
