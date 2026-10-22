@@ -1,0 +1,12 @@
+apiVersion: pgse.io/v1alpha1
+kind: PolicyWaiver
+metadata:
+  name: dev-batch-p08
+spec:
+  rule: P08
+  namespace: dev
+  namePrefix: batch
+  expiresAt: "2026-11-04T00:00:00Z"
+  reason: New batch job - CPU/memory needs are being measured before limits are set
+  approvedBy: platform-team
+  ticket: PGSE-005

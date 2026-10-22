@@ -1,0 +1,12 @@
+apiVersion: pgse.io/v1alpha1
+kind: PolicyWaiver
+metadata:
+  name: dev-vendor-p14
+spec:
+  rule: P14
+  namespace: dev
+  namePrefix: vendor
+  expiresAt: "2026-11-04T00:00:00Z"
+  reason: Third-party Helm chart does not set ownership labels yet; vendor change requested
+  approvedBy: platform-team
+  ticket: PGSE-006
