@@ -1,0 +1,12 @@
+apiVersion: pgse.io/v1alpha1
+kind: PolicyWaiver
+metadata:
+  name: dev-redis-p10
+spec:
+  rule: P10
+  namespace: dev
+  namePrefix: redis
+  expiresAt: "2026-11-04T00:00:00Z"
+  reason: Evaluating redis from Docker Hub in dev before deciding whether to approve or mirror it
+  approvedBy: platform-team
+  ticket: PGSE-004

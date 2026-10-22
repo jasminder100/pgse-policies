@@ -5,3 +5,4 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
   - ../../waivers/demo-web-old-p09.yaml
+  - ../../waivers/dev-redis-p10.yaml
