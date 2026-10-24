@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """K8s-PGSE exception test cases. Each file is /tmp/exc/<EXPECTED>__<case>.yaml,
 where EXPECTED is ALLOW, WARN or DENY. Run with the dry-run loop."""
-import copy, os, yaml
-base = yaml.safe_load(open(os.path.expanduser("~/pgse-sample-app/k8s/deployment.yaml")))
+import copy, os, subprocess, yaml
+# Base = the Deployment exactly as the Helm chart renders it (what Argo CD deploys)
+base = yaml.safe_load(subprocess.run(
+    ["helm", "template", "pgse-sample-app", os.path.expanduser("~/pgse-sample-app/chart"),
+     "-n", "demo", "--show-only", "templates/deployment.yaml"],
+    capture_output=True, text=True, check=True).stdout)
 ACR = base["spec"]["template"]["spec"]["containers"][0]["image"].rsplit(":", 1)[0]
 os.makedirs("/tmp/exc", exist_ok=True)
 
