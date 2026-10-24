@@ -28,6 +28,7 @@ def case(expect, name, ns, image=None, no_probes=False, privileged=False,
     if no_probes: c.pop("readinessProbe"); c.pop("livenessProbe")
     if privileged: c["securityContext"].update(privileged=True, allowPrivilegeEscalation=True)
     if sa: pod["serviceAccountName"] = sa
+    else: pod.pop("serviceAccountName", None)   # no SA asked for = the namespace default SA (chart sets its own)
     if keep_token: pod.pop("automountServiceAccountToken", None)
     if no_resources: c.pop("resources")
     write(expect, name, d)
