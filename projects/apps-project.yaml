@@ -20,3 +20,5 @@ spec:
     - {group: policy, kind: PodDisruptionBudget}
     - {group: "",     kind: Service}
     - {group: "",     kind: ConfigMap}
+    - {group: "",     kind: ServiceAccount}       # pod identity only: no Role/RoleBinding allowed, so no API rights
+    - {group: secrets-store.csi.x-k8s.io, kind: SecretProviderClass}   # Key Vault mounts; access still decided by Azure RBAC
