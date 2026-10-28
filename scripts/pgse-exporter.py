@@ -44,7 +44,8 @@ def rule_id(name):
 
 def esc(v):
     v = "" if v is None else str(v)
-    return v.replace("\\", "\\\\").replace("\n", " ").replace('"', '\\"')[:200]
+    v = v.replace("\n", " ")[:200]
+    return v.replace("\\", "\\\\").replace('"', '\\"')
 
 def lbl(**kw):
     return "{" + ",".join(f'{k}="{esc(v)}"' for k, v in kw.items()) + "}"
