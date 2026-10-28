@@ -51,7 +51,7 @@ data:
          "datasource": {"type": "prometheus", "uid": "${datasource}"},
          "fieldConfig": {"defaults": {"unit": "percent", "thresholds": {"mode": "absolute", "steps": [
            {"color": "red", "value": null}, {"color": "orange", "value": 90}, {"color": "green", "value": 100}]}}},
-         "targets": [{"refId": "A", "expr": "pgse_compliance_percent"}]},
+         "targets": [{"refId": "A", "expr": "max(pgse_compliance_percent)"}]},
         {"id": 8, "type": "stat", "title": "Compliance exporter",
          "gridPos": {"x": 16, "y": 14, "w": 8, "h": 5},
          "datasource": {"type": "prometheus", "uid": "${datasource}"},
