@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""CI guardrail for waivers/*.yaml: required fields present, not expired, max 90 days ahead."""
+"""CI guardrail for waivers/*.yaml: required fields present, not expired, max 90 days ahead, never for non-waivable rules."""
 import datetime as dt, pathlib, re, sys
 
 MAX_DAYS = 90
+NON_WAIVABLE = {"P01", "P03", "P04", "P24"}   # direct compromise or leak: fix the workload, never waive
 REQUIRED = ["rule", "namespace", "expiresAt", "reason", "approvedBy", "ticket"]
 now = dt.datetime.now(dt.timezone.utc)
 errors = 0
@@ -13,6 +14,9 @@ for f in sorted(pathlib.Path(__file__).resolve().parent.parent.glob("waivers/*.y
     missing = [k for k in REQUIRED if not spec.get(k)]
     if "kind: PolicyWaiver" not in text or missing:
         print(f"::error file={f.name}::not a valid PolicyWaiver (missing: {', '.join(missing) or 'kind'})"); errors += 1; continue
+    if spec["rule"].strip().upper() in NON_WAIVABLE:
+        print(f"::error file={f.name}::rule {spec['rule']} cannot be waived "
+              f"(non-waivable: {', '.join(sorted(NON_WAIVABLE))}); fix the workload instead"); errors += 1; continue
     try:
         exp = dt.datetime.fromisoformat(spec["expiresAt"].replace("Z", "+00:00"))
     except ValueError:
